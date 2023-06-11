@@ -9,6 +9,7 @@ class MarsRover
     @y = y
     @direction = direction
   end
+
   def move_forward
     if moving_through_y?
       @y = @y + Y_DIRECTIONS[@direction.to_sym]
@@ -16,15 +17,18 @@ class MarsRover
       @x = @x + X_DIRECTIONS[@direction.to_sym]
     end
   end
+
   def spin_left
     new_index = (DIRECTIONS.index(@direction) - 1)%4 
     @direction = DIRECTIONS[new_index]
   end
+
   def spin_right
     new_index = (DIRECTIONS.index(@direction) + 1)%4 
     @direction = DIRECTIONS[new_index]
   end
   
+  private
 
   def moving_through_x?
     X_DIRECTIONS.keys.include?(@direction.to_sym)

@@ -13,4 +13,5 @@ In order to run the test, you can run the test file from the mars_rover
 directory. Running the following command:
 
     ruby mars_rover_test.rb
+    ruby plateau_test.rb
 
