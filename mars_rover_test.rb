@@ -20,6 +20,7 @@ class MarsRoverTest < Minitest::Test
     rover = MarsRover.new(x, y, direction)
     assert_raises(ValidateCoordinatesError, 'rover going outside the plateau') { rover.move_forward(plateau_size) }
   end
+
   def test_prevent_plateau_overflow_to_east
     x = 5
     y = 5
@@ -27,6 +28,16 @@ class MarsRoverTest < Minitest::Test
     plateau_size = {:x=>"5", :y=>"5"}
     rover = MarsRover.new(x, y, direction)
     assert_raises(ValidateCoordinatesError, 'rover going outside the plateau') { rover.move_forward(plateau_size) }
+  end
+
+  def test_prevent_collision
+    unavailable_coords = [[4, 4]]
+    x = 3
+    y = 4
+    direction = 'E'
+    plateau_size = {:x=>"5", :y=>"5"}
+    rover = MarsRover.new(x, y, direction)
+    assert_raises(ValidateCoordinatesError, 'rover going to collide') { rover.move_forward(plateau_size, unavailable_coords) }
   end
   def test_rover_moves_south
     x = 0

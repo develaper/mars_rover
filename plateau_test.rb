@@ -46,4 +46,9 @@ class PlateauTest < Minitest::Test
     input = "5 5\n1 2 T\nL M L M L M L M M\n3 3 E\nM M R M M R M R R M"
     assert_raises(ValidateInputError, 'invalid direction') { Plateau.new(input).deploy_rovers }
   end
+
+  def test_deploy_rovers_with_coliding_coordinates
+    input = "5 5\n1 2 N\nL M L M L M L M M\n1 3 N\nR M M R M M R M R R M"
+    assert_raises(ValidateInputError, 'invalid initial position') { Plateau.new(input).deploy_rovers }
+  end
 end

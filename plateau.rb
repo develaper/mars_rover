@@ -15,12 +15,14 @@ class Plateau
 
   def deploy_rovers
     deployed_rovers = []
+    unavailable_coords = []
 
     @instructions.each_slice(2) do |position, instructions|
-      rover = initialize_rover(position)
-      move_rover(rover, instructions)
+      rover = initialize_rover(position, unavailable_coords)
+      move_rover(rover, instructions, unavailable_coords)
 
       deployed_rovers << rover
+      unavailable_coords << [rover.x, rover.y]
     end
 
     deployed_rovers.map { |rover| "#{rover.x} #{rover.y} #{rover.direction}" }.join("\n")
@@ -28,21 +30,21 @@ class Plateau
 
   private
 
-  def initialize_rover(position)
+  def initialize_rover(position, unavailable_coords=[])
     x, y, direction = position.split(' ')
-    validate_initial_position(x, y)
+    validate_initial_position(x, y, unavailable_coords)
     validate_initial_direction(direction)
 
     rover = MarsRover.new(x.to_i, y.to_i, direction)
   end
   
-  def move_rover(rover, instructions)
+  def move_rover(rover, instructions, unavailable_coords=[])
     validate_instructions(instructions)
 
     instructions.chars.each do |instruction|
       case instruction
       when 'M'
-        rover.move_forward
+        rover.move_forward(@size, unavailable_coords)
       when 'L'
         rover.spin_left
       when 'R'
@@ -59,8 +61,9 @@ class Plateau
     lines.each { |line| lines.delete(line) unless (line =~ /[[:alnum:]]/) }
   end
 
-  def validate_initial_position(x, y)
+  def validate_initial_position(x, y, unavailable_coords)
     raise ValidateInputError, 'invalid initial position' if (x.to_i > @size[:x].to_i or y.to_i > @size[:y].to_i)
+    raise ValidateInputError, 'invalid initial position' if unavailable_coords.include?([x.to_i, y.to_i])
   end
 
   def validate_instructions(instructions)
