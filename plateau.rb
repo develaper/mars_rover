@@ -7,7 +7,8 @@ class Plateau
     lines = input.split("\n").compact
     first_line = lines.shift().gsub(/[[:space:]]/, "")
     validate_size(first_line)
-    @size = first_line.to_i
+    @size = {}
+    @size[:x],@size[:y] = first_line.split('')
     @instructions = sanitize_lines(lines)
   end
 
@@ -28,6 +29,8 @@ class Plateau
 
   def initialize_rover(position)
     x, y, direction = position.split(' ')
+    validate_initial_position(x, y)
+
     rover = MarsRover.new(x.to_i, y.to_i, direction)
   end
   
@@ -50,5 +53,9 @@ class Plateau
 
   def sanitize_lines(lines)
     lines.each { |line| lines.delete(line) unless (line =~ /[[:alnum:]]/) }
+  end
+
+  def validate_initial_position(x, y)
+    raise ValidateInputError, 'invalid initial position' if (x.to_i > @size[:x].to_i or y.to_i > @size[:y].to_i)
   end
 end
