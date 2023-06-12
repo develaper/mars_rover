@@ -1,10 +1,13 @@
 
 require_relative 'mars_rover'
+class ValidateInputError < StandardError; end
 class Plateau
   attr_accessor :size, :instructions
   def initialize(input)
     lines = input.split("\n").compact
-    @size = lines.shift().gsub(/[[:space:]]/, "").to_i
+    first_line = lines.shift().gsub(/[[:space:]]/, "")
+    validate_size(first_line)
+    @size = first_line.to_i
     @instructions = lines
   end
 
@@ -39,5 +42,9 @@ class Plateau
         rover.spin_right
       end
     end
+  end
+
+  def validate_size(first_line)
+    raise ValidateInputError, 'invalid plateau size' unless /\A\d+\z/ === first_line
   end
 end
