@@ -41,4 +41,9 @@ class PlateauTest < Minitest::Test
     input = "5 5\n1 2 N\nL M L M X J K W Q L M L M M\n3 3 E\nM M R M M R M R R M"
     assert_raises(ValidateInputError, 'invalid instruction') { Plateau.new(input).deploy_rovers }
   end
+
+  def test_deploy_rovers_with_wrong_initial_direction
+    input = "5 5\n1 2 T\nL M L M L M L M M\n3 3 E\nM M R M M R M R R M"
+    assert_raises(ValidateInputError, 'invalid direction') { Plateau.new(input).deploy_rovers }
+  end
 end

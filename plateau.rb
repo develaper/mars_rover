@@ -31,6 +31,7 @@ class Plateau
   def initialize_rover(position)
     x, y, direction = position.split(' ')
     validate_initial_position(x, y)
+    validate_initial_direction(direction)
 
     rover = MarsRover.new(x.to_i, y.to_i, direction)
   end
@@ -65,5 +66,9 @@ class Plateau
   def validate_instructions(instructions)
     invalid_instructions = instructions.gsub(/[[:space:]]/, "").split('').uniq - ['M','R','L']
     raise ValidateInputError, 'invalid instruction' if invalid_instructions.any?
+  end
+
+  def validate_initial_direction(direction)
+    raise ValidateInputError, 'invalid direction' unless ['S', 'W', 'N', 'E'].include?(direction)
   end
 end
