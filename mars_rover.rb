@@ -1,3 +1,4 @@
+class ValidateCoordinatesError < StandardError; end
 class MarsRover
   attr_accessor :x, :y, :direction
   DIRECTIONS = ['N', 'E', 'S', 'W']
@@ -10,11 +11,29 @@ class MarsRover
     @direction = direction
   end
 
-  def move_forward
+  def move_forward(plateau_size, unavailable_coords=[])
     if moving_through_y?
-      @y = @y + Y_DIRECTIONS[@direction.to_sym]
+      next_position = @y + Y_DIRECTIONS[@direction.to_sym]
+      next_coords = [@x, next_position]
+      if next_position > plateau_size[:y].to_i
+        raise ValidateCoordinatesError, 'rover going outside the plateau' 
+      end
+      if unavailable_coords.include?(next_coords)
+        raise ValidateCoordinatesError, 'rover going to collide' 
+      end
+      
+      @y = next_position
     elsif moving_through_x?
-      @x = @x + X_DIRECTIONS[@direction.to_sym]
+      next_position = @x + X_DIRECTIONS[@direction.to_sym]
+      next_coords = [next_position, @y]
+      if next_position > plateau_size[:x].to_i
+        raise ValidateCoordinatesError, 'rover going outside the plateau' 
+      end
+      if unavailable_coords.include?(next_coords)
+        raise ValidateCoordinatesError, 'rover going to collide' 
+      end
+      
+      @x = next_position
     end
   end
 
