@@ -7,6 +7,7 @@ class Plateau
     lines = input.split("\n").compact
     first_line = lines.shift().gsub(/[[:space:]]/, "")
     validate_size(first_line)
+    
     @size = {}
     @size[:x],@size[:y] = first_line.split('')
     @instructions = sanitize_lines(lines)
@@ -35,6 +36,8 @@ class Plateau
   end
   
   def move_rover(rover, instructions)
+    validate_instructions(instructions)
+
     instructions.chars.each do |instruction|
       case instruction
       when 'M'
@@ -57,5 +60,10 @@ class Plateau
 
   def validate_initial_position(x, y)
     raise ValidateInputError, 'invalid initial position' if (x.to_i > @size[:x].to_i or y.to_i > @size[:y].to_i)
+  end
+
+  def validate_instructions(instructions)
+    invalid_instructions = instructions.gsub(/[[:space:]]/, "").split('').uniq - ['M','R','L']
+    raise ValidateInputError, 'invalid instruction' if invalid_instructions.any?
   end
 end

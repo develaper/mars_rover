@@ -35,6 +35,10 @@ class PlateauTest < Minitest::Test
   def test_deploy_rovers_with_position_outside_of_the_plateau
     input = "5 5\n6 6 N\nL M L M L M L M M\n3 3 E\nM M R M M R M R R M"
     assert_raises(ValidateInputError, 'invalid initial position') { Plateau.new(input).deploy_rovers }
+  end
 
+  def test_deploy_rovers_with_poluted_instructions
+    input = "5 5\n1 2 N\nL M L M X J K W Q L M L M M\n3 3 E\nM M R M M R M R R M"
+    assert_raises(ValidateInputError, 'invalid instruction') { Plateau.new(input).deploy_rovers }
   end
 end
