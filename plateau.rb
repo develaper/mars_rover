@@ -8,7 +8,7 @@ class Plateau
     first_line = lines.shift().gsub(/[[:space:]]/, "")
     validate_size(first_line)
     @size = first_line.to_i
-    @instructions = lines
+    @instructions = sanitize_lines(lines)
   end
 
   def deploy_rovers
@@ -46,5 +46,9 @@ class Plateau
 
   def validate_size(first_line)
     raise ValidateInputError, 'invalid plateau size' unless /\A\d+\z/ === first_line
+  end
+
+  def sanitize_lines(lines)
+    lines.each { |line| lines.delete(line) unless (line =~ /[[:alnum:]]/) }
   end
 end
